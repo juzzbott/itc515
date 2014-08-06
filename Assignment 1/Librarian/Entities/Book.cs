@@ -85,11 +85,11 @@ namespace Librarian.Entities
 			}
 
 			// Set the book fields
-			_id = bookId;
-			_author = author;
-			_title = title;
-			_callNumber = callNumber;
-			_bookState = BookConstants.BookState.AVAILABLE;
+			this._id = bookId;
+			this._author = author;
+			this._title = title;
+			this._callNumber = callNumber;
+			this._bookState = BookConstants.BookState.AVAILABLE;
 
 		}
 
@@ -206,29 +206,49 @@ namespace Librarian.Entities
 			_bookState = BookConstants.BookState.DISPOSED;
 		}
 
+		/// <summary>
+		/// Gets the current state of the book.
+		/// </summary>
+		/// <returns>The BookState of the book.</returns>
 		public BookConstants.BookState getState()
 		{
-			throw new NotImplementedException();
+			return this._bookState;
 		}
 
+		/// <summary>
+		/// Gets the author of the book.
+		/// </summary>
+		/// <returns>The author of the book.</returns>
 		public string getAuthor()
 		{
-			throw new NotImplementedException();
+			return this._author;
 		}
 
+		/// <summary>
+		/// Gets the title of the book.
+		/// </summary>
+		/// <returns>The title of the book.</returns>
 		public string getTitle()
 		{
-			throw new NotImplementedException();
+			return this._title;
 		}
 
+		/// <summary>
+		/// Gets the call number of the book.
+		/// </summary>
+		/// <returns>The call number of the book.</returns>
 		public string getCallNumber()
 		{
-			throw new NotImplementedException();
+			return this._callNumber;
 		}
 
+		/// <summary>
+		/// Gets the Id of the book.
+		/// </summary>
+		/// <returns>The Id of the book.</returns>
 		public int getID()
 		{
-			throw new NotImplementedException();
+			return this._id;
 		}
 
 		#endregion
