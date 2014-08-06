@@ -11,7 +11,7 @@ namespace Librarian.Entities
 	public class Loan : ILoan
 	{
 
-		#region Loan properties
+		#region Loan fields
 
 		/// <summary>
 		/// The Id for the current loan object.
