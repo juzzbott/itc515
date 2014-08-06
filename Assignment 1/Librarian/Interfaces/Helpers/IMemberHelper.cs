@@ -8,7 +8,7 @@ using Librarian.Interfaces.Entities;
 
 namespace Librarian.Interfaces.Helpers
 {
-    interface IMemberHelper
+    public interface IMemberHelper
     {
         IMember makeMember(string firstName, string lastName, string contactPhone, string emailAddress, int id);
 

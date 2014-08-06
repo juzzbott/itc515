@@ -39,8 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Daos\MemberDAO.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\Loan.cs" />
+    <Compile Include="Entities\Member.cs" />
     <Compile Include="Interfaces\Controls\BorrowCTLConstants.cs" />
     <Compile Include="Interfaces\Controls\IBorrowCTL.cs" />
     <Compile Include="Interfaces\Daos\IBookDAO.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Interfaces\Uis\IBorrowUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
