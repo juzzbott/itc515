@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Daos\BookDAO.cs" />
     <Compile Include="Daos\MemberDAO.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\Loan.cs" />

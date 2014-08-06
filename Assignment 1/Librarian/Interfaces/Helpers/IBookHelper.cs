@@ -8,7 +8,7 @@ using Librarian.Interfaces.Entities;
 
 namespace Librarian.Interfaces.Helpers
 {
-    interface IBookHelper
+    public interface IBookHelper
     {
         IBook makeBook(string author, string title, string callNumber, int id);
 

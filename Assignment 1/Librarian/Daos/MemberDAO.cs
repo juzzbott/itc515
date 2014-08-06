@@ -53,7 +53,7 @@ namespace Librarian.Daos
 			int maxId = getMaxId();
 
 			// Create the IMember object
-			IMember member = new Member(firstName, lastName, ContactPhone, emailAddress, maxId + 1);
+			IMember member = _helper.makeMember(firstName, lastName, ContactPhone, emailAddress, maxId + 1);
 
 			// add to the list
 			_items.Add(member);

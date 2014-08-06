@@ -8,7 +8,7 @@ using Librarian.Interfaces.Entities;
 
 namespace Librarian.Interfaces.Helpers
 {
-    interface ILoanHelper
+    public interface ILoanHelper
     {
         ILoan makeLoan(IBook book, IMember borrower, DateTime borrowDate, DateTime dueDate, int id);
 
