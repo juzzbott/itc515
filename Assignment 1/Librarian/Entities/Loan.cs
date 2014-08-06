@@ -116,44 +116,113 @@ namespace Librarian.Entities
 
 		#region ILoan interface members
 
+		/// <summary>
+		/// Commits the pending loan by setting the loan state to current. 
+		/// </summary>
+		/// <exception cref="System.ApplicationException">ApplicationException is thrown if the current loan is not in the PENDING state.</exception>
 		public void commit()
 		{
-			throw new NotImplementedException();
+			// If the loan state is not pending, throw exception
+			if (_loanState != LoanConstants.LoanState.PENDING)
+			{
+				throw new ApplicationException("The loan can only be commited if it is in the PENDING state.");
+			}
+
+			// Set the current loan state to current
+			_loanState = LoanConstants.LoanState.CURRENT;
+
 		}
 
+		/// <summary>
+		/// Completes the loan by setting the loan state to complete.
+		/// </summary>
+		/// <exception cref="System.ApplicationException">ApplicationException is thrown if the current loan is not in the CURRENT or OVERDUE states.</exception>
 		public void complete()
 		{
-			throw new NotImplementedException();
+
+			// If the loan state is not current or overdue, throw exception
+			if (_loanState != LoanConstants.LoanState.CURRENT || _loanState != LoanConstants.LoanState.OVERDUE)
+			{
+				throw new ApplicationException("The loan can only be completed if it is in the CURRENT or OVERDUE state.");
+			}
+
+			// Set the current loan state to current
+			_loanState = LoanConstants.LoanState.COMPLETE;
 		}
 
+		/// <summary>
+		/// Returns true if the loan is in the OVERDUE state.
+		/// </summary>
+		/// <returns>True if the loan is in the OVERDUE state, otherwise false.</returns>
 		public bool isOverDue()
 		{
-			throw new NotImplementedException();
+			return (_loanState == LoanConstants.LoanState.OVERDUE);
 		}
 
+		/// <summary>
+		/// Checks to see if the loan is overdue by ensuring the currentDate is less than or equal to the loan due date.
+		/// </summary>
+		/// <param name="currentDate">The current date to check if the loan is overdue.</param>
+		/// <returns>True if the loan is in the OVERDUE state, otherwise false.</returns>
+		/// <exception cref="System.ApplicationException">ApplicationException is thrown if the current loan is not in the CURRENT or OVERDUE states.</exception>
 		public bool checkOverDue(DateTime currentDate)
 		{
-			throw new NotImplementedException();
+
+			// If the loan state is not current or overdue, throw exception
+			if (_loanState != LoanConstants.LoanState.CURRENT || _loanState != LoanConstants.LoanState.OVERDUE)
+			{
+				throw new ApplicationException("The loan can only be completed if it is in the CURRENT or OVERDUE state.");
+			}
+
+			// Checks if the current date (midnight of that date so that the full day is valid) is greater than than loan due date.
+			// If the currentDate > dueDate, set the loan state to OVERDUE and return true, otherwise return false.
+			if (currentDate.Date > _dueDate)
+			{
+				_loanState = LoanConstants.LoanState.OVERDUE;
+				return false;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
+		/// <summary>
+		/// Gets the IMember borrow object.
+		/// </summary>
+		/// <returns>The borrower object.</returns>
 		public IMember getBorrower()
 		{
-			throw new NotImplementedException();
+			return _borrower;
 		}
 
+		/// <summary>
+		/// Gets the book on loan.
+		/// </summary>
+		/// <returns>The book object.</returns>
 		public IBook getBook()
 		{
-			throw new NotImplementedException();
+			return _book;
 		}
 
+		/// <summary>
+		/// Gets the Id of the loan object.
+		/// </summary>
+		/// <returns>The Id of the loan.</returns>
 		public int getID()
 		{
-			throw new NotImplementedException();
+			// return the Id of the loan
+			return _id;
 		}
 
+		/// <summary>
+		/// Gets the current state of the loan.
+		/// <seealso cref="Librarian.Interfaces.Entities.LoanConstants.LoanState"/>
+		/// </summary>
+		/// <returns>The current state of the loan.</returns>
 		public LoanConstants.LoanState getState()
 		{
-			throw new NotImplementedException();
+			return _loanState;
 		}
 
 		#endregion
