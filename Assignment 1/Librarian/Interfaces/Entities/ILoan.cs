@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Librarian.Interfaces.Entities
 {
-    interface ILoan
+    public interface ILoan
     {
         void commit();
 

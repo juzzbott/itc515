@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Librarian.Interfaces.Entities
 {
-    interface IMember
+    public interface IMember
     {
         bool hasOverDueLoans();
 

@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Loan.cs" />
     <Compile Include="Interfaces\Controls\BorrowCTLConstants.cs" />
     <Compile Include="Interfaces\Controls\IBorrowCTL.cs" />
     <Compile Include="Interfaces\Daos\IBookDAO.cs" />

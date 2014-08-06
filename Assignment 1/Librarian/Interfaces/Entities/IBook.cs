@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Librarian.Interfaces.Entities
 {
-    interface IBook
+    public interface IBook
     {
         void borrow(ILoan loan);
 
