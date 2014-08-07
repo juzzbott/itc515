@@ -27,6 +27,7 @@ namespace Librarian.Daos
 		/// <summary>
 		/// Creates a new instance of the Member Data Access Object.
 		/// </summary>
+		/// <param name="helper">An IMemberHelper object.</param>
 		/// <exception cref="System.ArgumentNullException">Thrown if the 'helper' parameter is null.</exception>
 		public MemberDAO(IMemberHelper helper)
 		{

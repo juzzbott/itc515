@@ -30,6 +30,11 @@ namespace Librarian.Daos
 
 		#region Contstructor
 
+		/// <summary>
+		/// Creates a new instance of the BookDAO object.
+		/// </summary>
+		/// <param name="helper">An IBookHelper object.</param>
+		/// <exception cref="System.ArgumentNullException">Thrown if the 'helper' parameter is null.</exception>
 		public BookDAO(IBookHelper helper)
 		{
 

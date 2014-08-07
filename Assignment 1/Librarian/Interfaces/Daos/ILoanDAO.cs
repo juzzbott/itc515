@@ -9,7 +9,7 @@ using Librarian.Interfaces.Helpers;
 
 namespace Librarian.Interfaces.Daos
 {
-    interface ILoanDAO
+    public interface ILoanDAO
     {
         void createNewPendingList(IMember borrower);
 
