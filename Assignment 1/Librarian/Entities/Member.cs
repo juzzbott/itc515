@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Librarian.Daos;
+using Librarian.Helpers;
+using Librarian.Interfaces.Daos;
 using Librarian.Interfaces.Entities;
 
 namespace Librarian.Entities
@@ -42,6 +45,11 @@ namespace Librarian.Entities
 		/// The state of the current member.
 		/// </summary>
 		private MemberConstants.MemberState _memberState;
+
+		/// <summary>
+		/// Determines the fine amount for the member.
+		/// </summary>
+		private float _fineAmount;
 
 		#endregion
 
@@ -92,40 +100,77 @@ namespace Librarian.Entities
 			// Set the default member state
 			this._memberState = MemberConstants.MemberState.BORROWING_ALLOWED;
 
+			// Set the fine amount to 0
+			this._fineAmount = 0.0f;
+
+
 		}
 
 		#endregion
 
 		#region IMember interface members
 
+		/// <summary>
+		/// Determines if any of the loans for the member are overdue.
+		/// </summary>
+		/// <returns>True if the loans are overdue, otherwise false.</returns>
 		public bool hasOverDueLoans()
 		{
-			throw new NotImplementedException();
+			// Get the loans list
+			List<ILoan> currentLoans = this.getLoans();
+
+			// If any of the loans are overdue, return true, otherwise false
+			return currentLoans.Any(i => i.checkOverDue(DateTime.Now));
 		}
 
+		/// <summary>
+		/// Determines if the user has reached the limit of the amount of loans they can have.
+		/// </summary>
+		/// <returns>True if the loan limit is reached, otherwise false;</returns>
 		public bool hasReachedLoanLimit()
 		{
-			throw new NotImplementedException();
+			// Get the loans list
+			List<ILoan> currentLoans = this.getLoans();
+
+			return (currentLoans.Count >= MemberConstants.LOAN_LIMIT);
+
 		}
 
+		/// <summary>
+		/// Determines if the user has any fines payable.
+		/// </summary>
+		/// <returns>True if the user has any fines, otherwise false.</returns>
 		public bool hasFinesPayable()
 		{
-			throw new NotImplementedException();
+			return (this._fineAmount > 0.0);
 		}
 
+		/// <summary>
+		/// Determines if the user has reached the maximum limit of the fine amount.
+		/// </summary>
+		/// <returns>True if the fine limit has been reached, otherwise false.</returns>
 		public bool hasReachedFineLimit()
 		{
-			throw new NotImplementedException();
+			return (this._fineAmount >= MemberConstants.FINE_LIMIT);
 		}
 
+		/// <summary>
+		/// Gets the current fine amount for the user.
+		/// </summary>
+		/// <returns>The fine amount</returns>
 		public float getFineAmount()
 		{
-			throw new NotImplementedException();
+			return this._fineAmount;
 		}
 
+		/// <summary>
+		/// Adds the fine amount to members existing fine amount.
+		/// </summary>
+		/// <param name="fine">The fine amount to add.</param>
 		public void addFine(float fine)
 		{
-			throw new NotImplementedException();
+			// Add the fine amount
+			this._fineAmount += fine;
 		}
 
 		public void payFine(float payment)
@@ -138,9 +183,18 @@ namespace Librarian.Entities
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Gets a list of loans for the current member.
+		/// </summary>
+		/// <returns>The list of loans for the user.</returns>
 		public List<ILoan> getLoans()
 		{
-			throw new NotImplementedException();
+
+			// Create the loan DAO.
+			ILoanDAO loanDao = new LoanDAO(new LoanHelper());
+
+			// return the loans for the user.
+			return loanDao.findLoansByBorrower(this);
 		}
 
 		public void removeLoan(ILoan loan)

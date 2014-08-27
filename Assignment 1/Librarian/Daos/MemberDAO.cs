@@ -24,6 +24,8 @@ namespace Librarian.Daos
 		/// </summary>
 		private IMemberHelper _helper;
 
+		#region Constructor
+
 		/// <summary>
 		/// Creates a new instance of the Member Data Access Object.
 		/// </summary>
@@ -44,6 +46,8 @@ namespace Librarian.Daos
 			// Set the helper object
 			this._helper = helper;
 		}
+
+		#endregion
 
 		#region IMemberDAO interface methods
 
