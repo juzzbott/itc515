@@ -9,7 +9,7 @@ using Librarian.Interfaces.Helpers;
 
 namespace Librarian.Interfaces.Daos
 {
-    interface IBookDAO
+	public interface IBookDAO
     {
         IBook addBook(string author, string title, string callNo);
 

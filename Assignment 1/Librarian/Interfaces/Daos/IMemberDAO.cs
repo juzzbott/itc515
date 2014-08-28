@@ -9,7 +9,7 @@ using Librarian.Interfaces.Helpers;
 
 namespace Librarian.Interfaces.Daos
 {
-    interface IMemberDAO
+    public interface IMemberDAO
     {
         IMember addMember(string firstName, string lastName, string ContactPhone, string emailAddress);
 
