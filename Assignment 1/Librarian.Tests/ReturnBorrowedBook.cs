@@ -141,6 +141,44 @@ namespace Librarian.Tests
 		[TestCategory("Use Case: Return Borrowed Book")]
 		public void Test_Can_Return_Book()
 		{
+
+			// To test that we can return a book, we need to ensure that the member and books exist.
+			Assert.IsNotNull(this._mockMember, "The mock IMember object is null.");
+			Assert.IsNotNull(this._mockBooks, "The mock IBook collection is null.");
+			Assert.IsTrue((this._mockBooks.Count >= 2), "The mock IBook collection does not contain 2 or more IBook objects.");
+
+			// Create the pending loan list
+			_loanDao.createNewPendingList(_mockMember);
+
+			// Create the pending loan object
+			ILoan newLoan = _loanDao.createPendingLoan(_mockMember, _mockBooks[0], DateTime.Now, DateTime.Now.AddDays(LoanConstants.LOAN_PERIOD));
+			ILoan additionalLoan = _loanDao.createPendingLoan(_mockMember, _mockBooks[1], DateTime.Now, DateTime.Now.AddDays(LoanConstants.LOAN_PERIOD));
+
+			// Get the book for the newLoan
+			IBook newLoanBook = _mockBooks[0];
+			newLoanBook.borrow(newLoan);
+
+			// Ensure the book is not null and ON_LOAN
+			Assert.IsNotNull(newLoanBook, "The newLoanBook object is null.");
+			Assert.IsTrue(newLoanBook.getState() == BookConstants.BookState.ON_LOAN, "The newLoanBook is not in the ON_LOAN state.");
+
+			// Return the book in the undamaged state and ensure it's in the AVAILABLE state
+			newLoanBook.returnBook(false);
+			Assert.IsTrue(newLoanBook.getState() == BookConstants.BookState.AVAILABLE, "The newLoanBook is not in the AVAILABLE state.");
+
+			// Get the book for the newLoan
+			IBook additionalLoanBook = _mockBooks[1];
+			additionalLoanBook.borrow(additionalLoan);
+
+			// Ensure the book is not null and ON_LOAN
+			Assert.IsNotNull(additionalLoanBook, "The additionalLoanBook object is null.");
+			Assert.IsTrue(additionalLoanBook.getState() == BookConstants.BookState.ON_LOAN, "The additionalLoanBook is not in the ON_LOAN state.");
+
+			// Return the book in the damaged state and ensure it's in the DAMAGED state
+			additionalLoanBook.returnBook(true);
+			Assert.IsTrue(additionalLoanBook.getState() == BookConstants.BookState.DAMAGED, "The additionalLoanBook is not in the DAMAGED state.");
+
+
 		}
 
 		[TestMethod]
@@ -149,6 +187,7 @@ namespace Librarian.Tests
 		{
 
 			// To test we can get the correct book state, we need to ensure that the member and books exist.
+			Assert.IsNotNull(this._mockMember, "The mock IMember object is null.");
 			Assert.IsNotNull(this._mockBooks, "The mock IBook collection is null.");
 			Assert.IsTrue((this._mockBooks.Count >= 2), "The mock IBook collection does not contain 2 or more IBook objects.");
 
