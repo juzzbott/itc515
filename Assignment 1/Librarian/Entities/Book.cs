@@ -196,7 +196,7 @@ namespace Librarian.Entities
 		public void dispose()
 		{
 			// Ensure the book is in the AVAILABLE, DAMAGED or LOST states
-			if (_bookState != BookConstants.BookState.AVAILABLE || _bookState != BookConstants.BookState.DAMAGED ||
+			if (_bookState != BookConstants.BookState.AVAILABLE && _bookState != BookConstants.BookState.DAMAGED &&
 				_bookState != BookConstants.BookState.LOST)
 			{
 				throw new ApplicationException("The book cannot be marked as disposed as it is not currently in the AVAILABLE, DAMAGED or LOST state.");

@@ -116,7 +116,7 @@ namespace Librarian.Tests
 		public void Test_Can_Get_Book_By_Id()
 		{
 
-			// To create the pending loan, we need to ensure that the member and books exist.
+			// To test that we can get a book by ID, we need to ensure that the member and books exist.
 			Assert.IsNotNull(this._mockMember, "The mock IMember object is null.");
 			Assert.IsNotNull(this._mockBooks, "The mock IBook collection is null.");
 			Assert.IsTrue((this._mockBooks.Count >= 2), "The mock IBook collection does not contain 2 or more IBook objects.");
@@ -147,6 +147,33 @@ namespace Librarian.Tests
 		[TestCategory("Use Case: Return Borrowed Book")]
 		public void Test_Can_Get_Correct_Book_State()
 		{
+
+			// To test we can get the correct book state, we need to ensure that the member and books exist.
+			Assert.IsNotNull(this._mockBooks, "The mock IBook collection is null.");
+			Assert.IsTrue((this._mockBooks.Count >= 2), "The mock IBook collection does not contain 2 or more IBook objects.");
+
+			// Add the book to the book DAO.
+			IBook newBook = _bookDao.addBook(_mockBooks[0].getAuthor(), _mockBooks[0].getTitle(), _mockBooks[0].getCallNumber());
+
+			// Create the mock loan
+			ILoanHelper helper = new LoanHelper();
+			ILoan mockLoan = helper.makeLoan(newBook, _mockMember, DateTime.Now, DateTime.Now.AddDays(LoanConstants.LOAN_PERIOD), 1);
+
+			// Ensure the book exists
+			Assert.IsNotNull(newBook, "The newBook object is not null.");
+
+			// Ensure the inital book state is AVAILABLE
+			Assert.IsTrue(newBook.getState() == BookConstants.BookState.AVAILABLE);
+
+			// Set the book state to lost and check state
+			newBook.borrow(mockLoan);
+			newBook.lose();
+			Assert.IsTrue(newBook.getState() == BookConstants.BookState.LOST, "The newBook is not in the LOST state.");
+
+			// Set the book state to lost and check state
+			newBook.dispose();
+			Assert.IsTrue(newBook.getState() == BookConstants.BookState.DISPOSED, "The newBook is not in the DISPOSED state.");
+			
 		}
 
 
