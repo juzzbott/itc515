@@ -50,6 +50,11 @@ namespace Librarian.Entities
 		/// Determines the fine amount for the member.
 		/// </summary>
 		private float _fineAmount;
+		
+		/// <summary>
+		/// The list containing the loans
+		/// </summary>
+		private List<ILoan> _loanList;
 
 		#endregion
 
@@ -103,6 +108,9 @@ namespace Librarian.Entities
 			// Set the fine amount to 0
 			this._fineAmount = 0.0f;
 
+			// Create the loan list.
+			this._loanList = new List<ILoan>();
+
 
 		}
 
@@ -116,11 +124,9 @@ namespace Librarian.Entities
 		/// <returns>True if the loans are overdue, otherwise false.</returns>
 		public bool hasOverDueLoans()
 		{
-			// Get the loans list
-			List<ILoan> currentLoans = this.getLoans();
-
+		
 			// If any of the loans are overdue, return true, otherwise false
-			return currentLoans.Any(i => i.checkOverDue(DateTime.Now));
+			return _loanList.Any(i => i.isOverDue());
 		}
 
 		/// <summary>
@@ -129,10 +135,7 @@ namespace Librarian.Entities
 		/// <returns>True if the loan limit is reached, otherwise false;</returns>
 		public bool hasReachedLoanLimit()
 		{
-			// Get the loans list
-			List<ILoan> currentLoans = this.getLoans();
-
-			return (currentLoans.Count >= MemberConstants.LOAN_LIMIT);
+			return (_loanList.Count >= MemberConstants.LOAN_LIMIT);
 
 		}
 
@@ -167,20 +170,59 @@ namespace Librarian.Entities
 		/// Adds the fine amount to members existing fine amount.
 		/// </summary>
 		/// <param name="fine">The fine amount to add.</param>
+		/// <exception cref="System.ArgumentOutOfRangeException">Thrown when the fine amount is negative.</exception>
 		public void addFine(float fine)
 		{
+			// If the fine is negative, throw exception
+			if (fine < 0)
+			{
+				throw new ArgumentOutOfRangeException("fine", "The fine amount cannot be negative.");
+			}
+
 			// Add the fine amount
 			this._fineAmount += fine;
 		}
 
+		/// <summary>
+		/// Pays the 'payment' value of a fine. Payment does not need to be full amount. Payment amount cannot be negative.
+		/// </summary>
+		/// <param name="payment">The payment to make.</param>
+		/// <exception cref="System.ArgumentOutOfRangeException">Thrown when the payment amount is negative.</exception>
 		public void payFine(float payment)
 		{
-			throw new NotImplementedException();
+			// If the payment is negative, throw exception
+			if (payment < 0)
+			{
+				throw new ArgumentOutOfRangeException("payment", "The payment amount cannot be negative.");
+			}
+
+			// Deduct the payment amount
+			this._fineAmount -= payment;
 		}
 
+		/// <summary>
+		/// Adds the ILoan to the members current loans
+		/// </summary>
+		/// <param name="loan">The ILoan object to add to the collection.</param>
+		/// <exception cref="System.ArgumentNullException">Thrown if the loan parameter is null.</exception>
+		/// <exception cref="System.ApplicationException">Thrown if the current member is in the BORROWING_DISALLOWED state.</exception>
 		public void addLoan(ILoan loan)
 		{
-			throw new NotImplementedException();
+
+			// If the loan is null, throw exception
+			if (loan == null)
+			{
+				throw new ArgumentNullException("loan", "The 'loan' parameter cannot be null.");
+			}
+
+			// If the borrower is disabled, throw application exception
+			if (this._memberState == MemberConstants.MemberState.BORROWING_DISALLOWED)
+			{
+				throw new ApplicationException("The current member is disallowed from borrowing.");
+			}
+
+			// Add the loan to the members loan list
+			_loanList.Add(loan);
 		}
 
 		/// <summary>
@@ -189,17 +231,34 @@ namespace Librarian.Entities
 		/// <returns>The list of loans for the user.</returns>
 		public List<ILoan> getLoans()
 		{
-
-			// Create the loan DAO.
-			ILoanDAO loanDao = new LoanDAO(new LoanHelper());
-
 			// return the loans for the user.
-			return loanDao.findLoansByBorrower(this);
+			return _loanList;
 		}
 
+		/// <summary>
+		/// Removes the loan from the list of loans for the member.
+		/// </summary>
+		/// <param name="loan">The loan to remove.</param>
+		/// <exception cref="System.ArgumentNullException">Thrown if the loan parameter is null.</exception>
+		/// <exception cref="System.ApplicationException">Thrown if the loan does not exist in the list of loans for the member.</exception>
 		public void removeLoan(ILoan loan)
 		{
-			throw new NotImplementedException();
+
+			// If the loan is null, throw exception
+			if (loan == null)
+			{
+				throw new ArgumentNullException("loan", "The 'loan' parameter cannot be null.");
+			}
+
+			// If the borrower is disabled, throw application exception
+			if (!_loanList.Contains(loan))
+			{
+				throw new ApplicationException("The loan does not exist in the loan list.");
+			}
+
+			// Remove the loan
+			_loanList.Remove(loan);
+
 		}
 
 		/// <summary>
