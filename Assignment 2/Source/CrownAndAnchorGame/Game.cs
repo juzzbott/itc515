@@ -42,7 +42,8 @@ namespace CrownAndAnchorGame
             int matches = 0;
             for (int i = 0; i < dice.Count; i++)
             {
-                dice[i].roll();
+                DiceValue newValue = dice[i].roll();
+				values[i] = newValue;
                 if (values[i].Equals(pick)) matches += 1;
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CrownAndAnchorGame;
@@ -142,7 +143,7 @@ namespace CrownAndAnchorGame.Tests
 		}
 
 		[TestMethod]
-		[TestCategory("BUG003")]
+		[TestCategory("BUG004")]
 		public void Bug_Test_Output_Does_Not_Update_As_Die_Are_Rolled()
 		{
 			// Create the player object
@@ -162,13 +163,11 @@ namespace CrownAndAnchorGame.Tests
 			// Iterate 20 times through a loop
 			for (int i = 0; i < 20; i++)
 			{
-				if (i == 0)
-				{
-					die1Val = game.CurrentDiceValues[0];
-					die2Val = game.CurrentDiceValues[1];
-					die3Val = game.CurrentDiceValues[2];
-				}
-				else
+
+				game.playRound(player, DiceValue.CLUB, 1);
+
+				// Only check after the first iteration so that we have something to check for.
+				if (i > 0)
 				{
 					if (die1Val != game.CurrentDiceValues[0] || die2Val != game.CurrentDiceValues[1] ||
 						die3Val != game.CurrentDiceValues[2])
@@ -177,9 +176,64 @@ namespace CrownAndAnchorGame.Tests
 						break;
 					}
 				}
+
+				// Set the die values for next round.
+				die1Val = game.CurrentDiceValues[0];
+				die2Val = game.CurrentDiceValues[1];
+				die3Val = game.CurrentDiceValues[2];
 			}
 
 			Assert.IsFalse(diceValuesChanged, "The dice values have been updated as part of the Game method 'playRound'");
+
+		}
+
+		[TestMethod]
+		[TestCategory("BUG004")]
+		public void Resolve_Output_Does_Not_Update_As_Die_Are_Rolled()
+		{
+			// Create the player object
+			Player player = new Player("Test", 100);
+			Dice die1 = new Dice();
+			Dice die2 = new Dice();
+			Dice die3 = new Dice();
+
+			Game game = new Game(die1, die2, die3);
+
+			DiceValue die1Val = DiceValue.ANCHOR;
+			DiceValue die2Val = DiceValue.ANCHOR;
+			DiceValue die3Val = DiceValue.ANCHOR;
+
+			IList<bool> diceValuesChanged = new List<bool>();
+
+			// Iterate 20 times through a loop
+			for (int i = 0; i < 20; i++)
+			{
+
+				game.playRound(player, DiceValue.CLUB, 1);
+
+				// Only check after the first iteration so that we have something to check for.
+				if (i > 0)
+				{
+
+					// If we get the same three dice throws consecutively, the dice values are not updated.
+					if (die1Val == game.CurrentDiceValues[0] && die2Val == game.CurrentDiceValues[1] &&
+						die3Val == game.CurrentDiceValues[2])
+					{
+						diceValuesChanged.Add(false);
+					}
+					else
+					{
+						diceValuesChanged.Add(true);
+					}
+				}
+
+				// Set the die values for next round.
+				die1Val = game.CurrentDiceValues[0];
+				die2Val = game.CurrentDiceValues[1];
+				die3Val = game.CurrentDiceValues[2];
+			}
+
+			Assert.IsFalse(diceValuesChanged.Any(i => i == false), "The dice values have not been updated as part of the Game method 'playRound'");
 
 		}
 
