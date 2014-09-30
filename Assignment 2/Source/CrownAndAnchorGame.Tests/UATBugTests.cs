@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CrownAndAnchorGame;
@@ -74,5 +75,71 @@ namespace CrownAndAnchorGame.Tests
 			Assert.IsTrue(exceededLimit, "The bug still exists as the balance cannot reach the limit of the betting.");
 
 		}
+
+		[TestMethod]
+		[TestCategory("BUG003")]
+		public void Dice_Roll_Will_Always_Return_A_High_Repetition_Rate()
+		{
+
+			// Create the variables for the number of iterations before change, and initial value
+			List<int> iterationsBeforeChange = new List<int>();
+			int iterationsIndex = 0;
+			DiceValue initialValue = DiceValue.ANCHOR;
+
+			// Add the initial iteration
+			iterationsBeforeChange.Add(0);
+
+			// Create the dice object
+			Dice dice = new Dice();
+
+			// Loop through 1000 rolls of the dice, and get the max iterations before value changes
+			for (int i = 0; i < 1000; i++)
+			{
+				// Roll the dice
+				DiceValue val = dice.roll();
+
+				// If the iteration is 0, the set the initial value, otherwise check for changed value
+				if (i == 0)
+				{
+					initialValue = val;
+				}
+				else
+				{
+
+					// if the initial value is the same, then continue to next roll
+					if (initialValue == val)
+					{
+						iterationsBeforeChange[iterationsIndex] += 1;
+					}
+					else
+					{
+						// Value has changed, so if add new index and iteration value
+						iterationsBeforeChange.Add(0);
+						iterationsIndex++;
+						initialValue = val;
+					}
+				}
+
+			}
+
+			bool excessiveRepeats = false;
+			int numRepeats = 0;
+
+			// Anything with more than 5 repeat iterations would be bad...
+			for (int i = 0; i < iterationsBeforeChange.Count; i++)
+			{
+				if (iterationsBeforeChange[i] > 5)
+				{
+					excessiveRepeats = true;
+					numRepeats = iterationsBeforeChange[i];
+					break;
+				}
+			}
+
+			// Assert the result
+			Assert.IsFalse(excessiveRepeats, "Excessive repeats detected; Number of repeats detected: " + numRepeats.ToString());
+
+		}
+
 	}
 }
