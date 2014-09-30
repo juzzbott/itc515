@@ -141,5 +141,47 @@ namespace CrownAndAnchorGame.Tests
 
 		}
 
+		[TestMethod]
+		[TestCategory("BUG003")]
+		public void Bug_Test_Output_Does_Not_Update_As_Die_Are_Rolled()
+		{
+			// Create the player object
+			Player player = new Player("Test", 100);
+			Dice die1 = new Dice();
+			Dice die2 = new Dice();
+			Dice die3 = new Dice();
+
+			Game game = new Game(die1, die2, die3);
+
+			DiceValue die1Val = DiceValue.ANCHOR;
+			DiceValue die2Val = DiceValue.ANCHOR;
+			DiceValue die3Val = DiceValue.ANCHOR;
+
+			bool diceValuesChanged = false;
+
+			// Iterate 20 times through a loop
+			for (int i = 0; i < 20; i++)
+			{
+				if (i == 0)
+				{
+					die1Val = game.CurrentDiceValues[0];
+					die2Val = game.CurrentDiceValues[1];
+					die3Val = game.CurrentDiceValues[2];
+				}
+				else
+				{
+					if (die1Val != game.CurrentDiceValues[0] || die2Val != game.CurrentDiceValues[1] ||
+						die3Val != game.CurrentDiceValues[2])
+					{
+						diceValuesChanged = true;
+						break;
+					}
+				}
+			}
+
+			Assert.IsFalse(diceValuesChanged, "The dice values have been updated as part of the Game method 'playRound'");
+
+		}
+
 	}
 }
