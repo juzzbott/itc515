@@ -13,7 +13,7 @@ namespace CrownAndAnchorGame
 
     public class Dice
     {
-        private static readonly Random RANDOM = new Random();
+		private static readonly Random RANDOM = new Random();
         public static readonly Array VALUES = Enum.GetValues(typeof(DiceValue));
 
         private static readonly Dictionary<DiceValue, string> VALUE_REPR_MAP =
@@ -30,7 +30,7 @@ namespace CrownAndAnchorGame
         {
             get
             {
-                return (DiceValue)VALUES.GetValue(RANDOM.Next(VALUES.Length-1));
+                return (DiceValue)VALUES.GetValue(RANDOM.Next(VALUES.Length));
             }
         }
 

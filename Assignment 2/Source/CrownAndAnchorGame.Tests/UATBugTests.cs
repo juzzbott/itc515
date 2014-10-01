@@ -143,6 +143,56 @@ namespace CrownAndAnchorGame.Tests
 		}
 
 		[TestMethod]
+		[TestCategory("BUG003")]
+		public void Dice_Roll_Within_Acceptable_Probability_Ratio()
+		{
+
+			// Create the variables for the number of iterations before change, and initial value
+			Dictionary<DiceValue, int> diceRollValues = new Dictionary<DiceValue, int>();
+
+			// Add the initial iteration
+			diceRollValues.Add(DiceValue.ANCHOR, 0);
+			diceRollValues.Add(DiceValue.CLUB, 0);
+			diceRollValues.Add(DiceValue.CROWN, 0);
+			diceRollValues.Add(DiceValue.DIAMOND, 0);
+			diceRollValues.Add(DiceValue.HEART, 0);
+			diceRollValues.Add(DiceValue.SPADE, 0);
+
+			// Create the dice object
+			Dice dice = new Dice();
+			int totalRolls = 100000;
+
+			// Loop through 3000 rolls of the dice, and count the amount of times a particular value is rolled.
+			for (int i = 0; i < totalRolls; i++)
+			{
+				// Roll the dice
+				DiceValue val = dice.roll();
+
+				// If the iteration is 0, the set the initial value, otherwise check for changed value
+				diceRollValues[val] += 1;
+
+			}
+
+			decimal anchorRatio = ((decimal)diceRollValues[DiceValue.ANCHOR] / (decimal)totalRolls);
+			decimal clubRatio = ((decimal)diceRollValues[DiceValue.CLUB] / (decimal)totalRolls);
+			decimal crownRatio = ((decimal)diceRollValues[DiceValue.CROWN] / (decimal)totalRolls);
+			decimal diamondRatio = ((decimal)diceRollValues[DiceValue.DIAMOND] / (decimal)totalRolls);
+			decimal heartRatio = ((decimal)diceRollValues[DiceValue.HEART] / (decimal)totalRolls);
+			decimal spadeRatio = ((decimal)diceRollValues[DiceValue.SPADE] / (decimal)totalRolls);
+
+			Assert.IsTrue(anchorRatio >= 0.16M && anchorRatio <= 0.17M, "Anchor ratio outside required range.");
+			Assert.IsTrue(clubRatio >= 0.16M && clubRatio <= 0.17M, "Club ratio outside required range.");
+			Assert.IsTrue(crownRatio >= 0.16M && crownRatio <= 0.17M, "Crown ratio outside required range.");
+			Assert.IsTrue(diamondRatio >= 0.16M && diamondRatio <= 0.17M, "Diamond ratio outside required range.");
+			Assert.IsTrue(heartRatio >= 0.16M && heartRatio <= 0.17M, "Heart ratio outside required range.");
+			Assert.IsTrue(spadeRatio >= 0.16M && spadeRatio <= 0.17M, "Spade ratio outside required range.");
+
+			// Assert the result
+			//Assert.IsFalse(excessiveRepeats, "Excessive repeats detected; Number of repeats detected: " + numRepeats.ToString());
+
+		}
+
+		[TestMethod]
 		[TestCategory("BUG004")]
 		public void Bug_Test_Output_Does_Not_Update_As_Die_Are_Rolled()
 		{
